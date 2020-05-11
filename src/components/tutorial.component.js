@@ -25,7 +25,7 @@ class Tutorial extends Component {
   }
 
   componentDidMount() {
-    this.getTutorial(this.props.match.paramsid);
+    this.getTutorial(this.props.match.params.id);
   }
 
   onChangeTitle(e) {
@@ -33,7 +33,10 @@ class Tutorial extends Component {
 
     this.setState(function (prevState) {
       return {
-        currentTutorial: { ...prevState.currentTutorial, title: title },
+        currentTutorial: {
+          ...prevState.currentTutorial,
+          title: title,
+        },
       };
     });
   }
@@ -74,13 +77,26 @@ class Tutorial extends Component {
       .then((response) => {
         this.setState((prevState) => ({
           currentTutorial: {
-            currentTutorial: {
-              ...prevState.currentTutorial,
-              published: status,
-            },
+            ...prevState.currentTutorial,
+            published: status,
           },
         }));
         console.log(response.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
+
+  updateTutorial() {
+    TutorialDataService.update(
+      this.state.currentTutorial.id,
+      this.state.currentTutorial
+    )
+      .then((response) => {
+        console.log(response.data);
+
+        this.setState({ message: "tutorial updated successfully" });
       })
       .catch((e) => {
         console.log(e);
